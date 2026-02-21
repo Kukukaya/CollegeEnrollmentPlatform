@@ -620,7 +620,9 @@
     </div>
   </div>
   <script>
-    const API_BASE = "/api";
+    const API_BASE = "http://localhost:8080/api";
+    const API_MYSQL = API_BASE; 
+    const API_MONGO = API_BASE;
     const state = {
       studentId: localStorage.getItem("studentId") || null,
       coursesMaster: []
@@ -653,6 +655,27 @@
       });
     }
 
+    async function demoLogin() {
+      try {
+        const res = await fetch(`${API_BASE}/demo/reset`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ studentId: "S001" })
+        });
+
+        if (!res.ok) throw new Error("Reset failed");
+
+        const data = await res.json();
+        console.log(data);
+
+        localStorage.setItem("studentId", "S001");
+        alert("Demo data loaded");
+        location.reload();
+
+      } catch (err) {
+        alert("Backend not connected");
+      }
+    }
     async function doLogin() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -661,7 +684,7 @@
 
       try {
         // [ยิง API คนที่ 1]: POST /auth/login
-        const res = await fetch(`${API_MYSQL}/auth/login`, {
+        const res = await fetch(`${API_BASE}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password })
@@ -719,7 +742,7 @@
     // โหลดวิชาทั้งหมดมาใส่ Dropdown (API คนที่ 1)
     async function fetchMasterCourses() {
       try {
-        const res = await fetch(`${API_MYSQL}/courses`);
+        const res = await fetch(`${API_BASE}/courses`);
         if(!res.ok) throw new Error("Load failed");
         state.coursesMaster = await res.json();
       } catch (err) {
@@ -757,7 +780,7 @@
     async function fetchSummary() {
       let data = null;
       try {
-        const res = await fetch(`${API_MONGO}/summary/${state.studentId}`);
+        const res = await fetch(`${API_BASE}/summary/${state.studentId}`);
         if(!res.ok) throw new Error("Load failed");
         data = await res.json();
       } catch (err) {
@@ -818,7 +841,7 @@
     async function fetchCompleted() {
       let rows = [];
       try {
-        const res = await fetch(`${API_MONGO}/completed/${state.studentId}`);
+        const res = await fetch(`${API_BASE}/completed-courses/${state.studentId}`);
         if(!res.ok) throw new Error("Load failed");
         rows = await res.json();
       } catch (err) {
@@ -866,7 +889,7 @@
       const payload = { studentId: state.studentId, courseId, grade, term };
 
       try {
-        await fetch(`${API_MONGO}/completed`, {
+        await fetch(`${API_BASE}/completed`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
@@ -892,7 +915,7 @@
       if(!newGrade) return;
 
       try {
-        await fetch(`${API_MONGO}/completed/${id}`, {
+        await fetch(`${API_BASE}/completed/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ grade: newGrade.toUpperCase() })
@@ -908,7 +931,7 @@
       if(!confirm("ต้องการลบวิชานี้ใช่ไหม?")) return;
 
       try {
-        await fetch(`${API_MONGO}/completed/${id}`, { method: "DELETE" });
+        await fetch(`${API_BASE}/completed-courses/${id}`, { method: "DELETE" });
         await refreshAll();
       } catch (err) {
         alert("จำลองการลบข้อมูลสำเร็จ");
