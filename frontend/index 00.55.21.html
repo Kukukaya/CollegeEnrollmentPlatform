@@ -939,6 +939,36 @@
     }
 
   </script>
+  <script>
+const API_BASE = "http://localhost:8080/api";
+
+// Example: Fetch Study Plan
+async function fetchStudyPlan() {
+  try {
+    const res = await fetch(`${API_BASE}/study-plan`);
+    const data = await res.json();
+    console.log("Study Plan:", data);
+  } catch (err) {
+    console.error("Error fetching study plan:", err);
+  }
+}
+
+// Example: Register Course (MySQL)
+async function registerCourse(courseId) {
+  try {
+    const res = await fetch(`${API_BASE}/completed-courses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ courseId })
+    });
+
+    const data = await res.json();
+    console.log("Registered:", data);
+  } catch (err) {
+    console.error("Registration failed:", err);
+  }
+}
+</script>
 </body>
 </html>
 
