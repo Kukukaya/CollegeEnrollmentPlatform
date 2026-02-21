@@ -1,20 +1,28 @@
+version: "3.9"
+
 services:
   api:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"
-    environment:
-      - PORT=8080
-      - MONGO_URI=mongodb://mongo:27017/ku_credit_demo
+      - "3000:3000"
     depends_on:
+      - mysql
       - mongo
+    environment:
+      DATABASE_URL: "mysql://root:root@mysql:3306/college_db"
+      MONGO_URL: "mongodb://mongo:27017/college_progress"
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: college_db
+    ports:
+      - "3306:3306"
 
   mongo:
-    image: mongo:7
+    image: mongo:6
     ports:
       - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data:

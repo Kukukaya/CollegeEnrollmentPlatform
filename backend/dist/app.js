@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.app = void 0;
+const express_1 = __importDefault(require("express"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const studyPlan_routes_1 = require("./routes/studyPlan.routes");
+const completedCourse_routes_1 = require("./routes/completedCourse.routes");
+const summary_routes_1 = require("./routes/summary.routes");
+const demo_routes_1 = require("./routes/demo.routes");
+const cors_1 = __importDefault(require("cors"));
+dotenv_1.default.config();
+exports.app = (0, express_1.default)();
+exports.app.use(express_1.default.json());
+exports.app.use((0, cors_1.default)());
+exports.app.get("/health", (_, res) => res.json({ ok: true }));
+exports.app.use("/api/study-plan", studyPlan_routes_1.studyPlanRouter);
+exports.app.use("/api/completed-courses", completedCourse_routes_1.completedCourseRouter);
+exports.app.use("/api/summary", summary_routes_1.summaryRouter);
+exports.app.use("/api/demo", demo_routes_1.demoRouter);
