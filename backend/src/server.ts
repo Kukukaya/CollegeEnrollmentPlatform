@@ -6,8 +6,7 @@ import { connectMongo } from "./config/mongo";
 dotenv.config();
 
 const PORT = Number(process.env.PORT ?? 3000);
-const MONGO_URI =
-  process.env.MONGO_URI ?? process.env.MONGO_URL ?? "mongodb://localhost:27017/ku_credit_demo";
+const MONGO_URI = process.env.MONGO_URI!;
 
 async function main() {
   // connect to Mongo Atlas (or local) first
