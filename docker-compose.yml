@@ -4,7 +4,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "8080:8080"
     depends_on:
       - mysql
       - mongo
@@ -24,39 +24,12 @@ services:
       - mysql_data:/var/lib/mysql
 
   mongo:
-<<<<<<< Updated upstream
     image: mongo:6
     ports:
       - "27017:27017"
-=======
-    image: mongo:7
- #   ports:
- #     - "27017:27017"
->>>>>>> Stashed changes
     volumes:
       - mongo_data:/data/db
-
-  mysql:
-    image: mysql:8.4
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: credit_ku
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-
-  api-mysql:
-    build: ./backend-mysql
-    ports:
-      - "8081:8081"
-    environment:
-      - PORT=8081
-      - DATABASE_URL=mysql://root:rootpass@mysql:3306/credit_ku
-    depends_on:
-      - mysql
 
 volumes:
   mysql_data:
   mongo_data:
-  mysql_data:
